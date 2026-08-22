@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Berita Otomatis & GitHub Contributions</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Main CSS -->
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+
+    <!-- FontAwesome untuk Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- JSZip Library untuk kompresi file ZIP otomatis di browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <style>
+        /* CSS Tambahan khusus untuk layout generator berita agar menyatu dengan template */
+        :root {
+            --primary: #0b7285;
+            --primary-hover: #095c6a;
+            --bg-color: #f8f9fa;
+            --border-color: #ced4da;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #333;
+            /* Menyesuaikan tinggi agar tidak menabrak navbar tetap (fixed-top) */
+            padding-top: 76px; 
+        }
+
+        .generator-wrapper {
+            display: flex;
+            height: calc(100vh - 76px);
+            overflow: hidden;
+        }
+
+        /* Sidebar Form Area */
+        .sidebar {
+            width: 450px;
+            background: #fff;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-section-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .sidebar label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .sidebar input[type="text"],
+        .sidebar textarea {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.88rem;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar input[type="text"]:focus,
+        .sidebar textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11, 114, 133, 0.1);
+        }
+
+        .sidebar input[type="file"] {
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        .sidebar textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .btn-action {
+            width: 100%;
+            color: white;
+            border: none;
+            padding: 11px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-zip { background-color: #2b8a3e; }
+        .btn-email { background-color: #3b5bdb; }
+        .btn-github { background-color: #24292e; }
+        .btn-action:hover { opacity: 0.9; }
+
+        .instruction-box {
+            background: #e6fcf5;
+            border: 1px solid #c3fae8;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.82rem;
+            color: #0ca678;
+            line-height: 1.4;
+        }
+
+        /* Preview Area Portal Berita */
+        .preview-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            background-color: #e9ecef;
+        }
+
+        .news-page-preview {
+            background: #fff;
+            width: 100%;
+            max-width: 900px;
+            min-height: 1000px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .breadcrumb-news {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .breadcrumb-news a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .article-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #212529;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .featured-image-container {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .featured-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .image-caption {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .article-body p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #212529;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .article-body p.lead {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .article-body blockquote {
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            background: #f8f9fa;
+            margin: 25px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #495057;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .decision-box {
+            background: #e3fafc;
+            border: 1px solid #74c0fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        /* Responsif untuk layar kecil */
+        @media (max-width: 992px) {
+            .generator-wrapper {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            .preview-area {
+                height: auto;
+            }
+            body {
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+     <div id="preloader">
+        <div class="loader-content">
+            <div class="logo-animation">
+                <img src="img/download logo stikes.png" alt="Logo STIKes KHAS">
+                <div class="pulse-ring"></div>
+            </div>
+            <div class="loader-text">
+                <span class="letter">O</span>
+                <span class="letter">R</span>
+                <span class="letter">M</span>
+                <span class="letter">A</span>
+                <span class="letter">W</span>
+                <span class="letter">A</span>
+                <span class="letter"></span>
+                <span class="letter">S</span>
+                <span class="letter">T</span>
+                <span class="letter">I</span>
+                <span class="letter">K</span>
+                <span class="letter">e</span>
+                <span class="letter">s</span>
+                <span class="letter"></span>
+                <span class="letter">K</span>
+                <span class="letter">H</span>
+                <span class="letter">A</span>
+                <span class="letter">S</span>
+
+            </div>
+         </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="img/download logo stikes.png" alt="Logo HIMESY KHAS" class="me-3">
+                <span class="fw-bold fs-4">ORMAWA STIKes KHAS</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#himesyNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="himesyNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Tentang Kami<i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="tentangkami.html">Tentang Kami</a></li>
+                            <li><a class="dropdown-item" href="tugas-fungsi.html">Tugas & fungsi</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Struktur<i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><span class="dropdown-header text-warning fw-bold small">PIMPINAN</span></li>
+                            <li><a class="dropdown-item" href="https://www.stikeskhas.ac.id/">STIKes KHAS KEMPEK</a></li>
+                            <li><hr class="dropdown-divider bg-white opacity-25"></li>
+                            <li><span class="dropdown-header text-warning fw-bold small">DAFTAR ORMAWA</span></li>
+                            <li><a class="dropdown-item" href="structure.html">DPM (Dewan Perwakilan Mahasiswa)</a></li>
+                            <li><a class="dropdown-item" href="Stuktur bem.html">BEM (Badan Eksekutif Mahasiswa)</a></li>
+                            <li><a class="dropdown-item" href="struktur himafarma.html">HIMAFARMA (Himpunan Mahasiswa Farmasi)</a></li>
+                            <li><a class="dropdown-item" href="struktur himagi.html">HIMAGI (Himpunan Mahasiswa Gizi)</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="berita.html">BERITA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kotak Aspirasi.html">KOTAK ASPIRASI</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- KONTEN UTAMA -->
+    <div class="generator-wrapper">
+        <!-- FORM PANEL KIRI -->
+        <div class="sidebar">
+            <h2>Generator Berita & Google Drive</h2>
+            
+            <div class="instruction-box">
+                <strong>Panduan:</strong><br>
+                1. Masukkan teks & 2 foto dokumentasi.<br>
+                2. Simpan langsung ke Drive <strong>Pembuatan Berita Semua</strong>.
+            </div>
+            
+            <div class="form-section">
+                <div class="form-section-title">Header & Navigasi Berita</div>
+                <div class="form-group">
+                    <label>Kategori Berita</label>
+                    <input type="text" id="inKategori" value="Akademik & Kesehatan" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Sub Kategori / Kegiatan</label>
+                    <input type="text" id="inSubKategori" value="Workshop Keperawatan 2025" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Judul Berita Utama</label>
+                    <input type="text" id="inJudul" value="STIKes Khas Kempek Gelar Workshop Keterampilan Klinis untuk Tingkatkan Kompetensi Mahasiswa Keperawatan" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Penulis / Humas</label>
+                    <input type="text" id="inPenulis" value="Tim Media STIKes" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Publikasi</label>
+                    <input type="text" id="inTanggal" value="Selasa, 21 Oktober 2025" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">Dokumentasi (2 Foto)</div>
+                <div class="form-group">
+                    <label>Foto Utama (Header Berita)</label>
+                    <input type="file" id="inputFoto1" accept="image/*" onchange="previewImage(event, 'previewFoto1', 1)">
+                </div>
+                <div class="form-group">
+                    <label>Caption Foto Utama</label>
+                    <input type="text" id="inCaption1" value="Dokumentasi: Sesi praktik langsung penanganan pasien gawat darurat di laboratorium." oninput="updatePreview()">
+                </div>
+                <hr style="border: 0; border-top: 1px solid #ced4da; margin: 12px 0;">
+                <div class="form-group">
+                    <label>Foto Kedua (Suasana Workshop)</label>
+                    <input type="file" id="inputFoto2" accept="image/*" onchange="previewImage(event, 'previewFoto2', 2)">
+                </div>
+                <div class="form-group">
+                    <label>Caption Foto Kedua</label>
+                    <input type="text" id="inCaption2" value="Para peserta mahasiswa antusias mengikuti pemaparan materi dari narasumber ahli." oninput="updatePreview()">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">Isi Konten Berita</div>
+                <div class="form-group">
+                    <label>Paragraf Pembuka (Lead)</label>
+                    <textarea id="inLead" oninput="updatePreview()">Dalam upaya mencetak tenaga kesehatan yang profesional dan siap terjun ke dunia kerja, STIKes Khas Kempek Cirebon sukses menyelenggarakan Workshop Keterampilan Klinis Keperawatan bertaraf nasional pada Selasa, 21 Oktober 2025.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Paragraf Pengantar Tokoh</label>
+                    <textarea id="inPengantar" oninput="updatePreview()">Kegiatan yang diikuti oleh ratusan mahasiswa tingkat akhir ini menghadirkan praktisi kesehatan berpengalaman dari rumah sakit mitra untuk memberikan pelatihan langsung terkait standar pelayanan medis modern.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Kutipan / Quote Utama</label>
+                    <input type="text" id="inQuote" value="Keterampilan klinis yang mumpuni adalah kunci utama dalam memberikan pelayanan kesehatan yang berorientasi pada keselamatan pasien. — dr. Ahmad Fauzi, Sp.An." oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Poin Hasil / Agenda Utama</label>
+                    <textarea id="inKeputusan" style="min-height: 100px;" oninput="updatePreview()">1. Pelatihan simulasi penanganan kegawatdaruratan medis (Triage & RJP).
+2. Standarisasi prosedur sterilisasi dan pencegahan infeksi nosokomial.
+3. Diskusi interaktif seputar etika profesi keperawatan di era digital.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Paragraf Penutup</label>
+                    <textarea id="inPenutup" oninput="updatePreview()">Acara ditutup dengan penyerahan sertifikat secara simbolis kepada peserta terbaik. Diharapkan kegiatan ini mampu membekali mahasiswa dengan keahlian praktis yang solutif di lapangan.</textarea>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi Ekspor / Publikasi -->
+            <button class="btn-action btn-zip" onclick="downloadZIPPackage()">
+                Download Berkas ZIP (HTML + 2 Foto)
+            </button>
+
+            <button class="btn-action btn-email" onclick="sendViaEmail()">
+                <i class="fas fa-cloud-upload-alt"></i> Kirim & Simpan ke Google Drive
+            </button>
+        </div>
+
+        <!-- PREVIEW PANEL KANAN -->
+        <div class="preview-area">
+            <div class="news-page-preview">
+                
+                <div class="breadcrumb-news">
+                    <a href="#">Berita</a> > <a href="#" id="outKategori">Akademik & Kesehatan</a> > <span id="outSubKategori">Workshop Keperawatan 2025</span>
+                </div>
+
+                <h1 class="article-title" id="outJudul">STIKes Khas Kempek Gelar Workshop Keterampilan Klinis untuk Tingkatkan Kompetensi Mahasiswa Keperawatan</h1>
+
+                <div class="article-meta">
+                    <span><i class="fas fa-user"></i> <strong id="outPenulis">Tim Media STIKes</strong></span>
+                    <span><i class="fas fa-calendar-alt"></i> <span id="outTanggal">Selasa, 21 Oktober 2025</span></span>
+                </div>
+
+                <!-- Foto 1 -->
+                <div class="featured-image-container">
+                    <img id="previewFoto1" class="featured-image" src="https://placehold.co/800x400/e9ecef/495057?text=Foto+Utama+Workshop" alt="Foto Utama">
+                    <p class="image-caption" id="outCaption1">Dokumentasi: Sesi praktik langsung penanganan pasien gawat darurat di laboratorium.</p>
+                </div>
+
+                <div class="article-body">
+                    <p class="lead" id="outLead">
+                        Dalam upaya mencetak tenaga kesehatan yang profesional dan siap terjun ke dunia kerja, STIKes Khas Kempek Cirebon sukses menyelenggarakan Workshop Keterampilan Klinis Keperawatan bertaraf nasional pada Selasa, 21 Oktober 2025.
+                    </p>
+
+                    <p id="outPengantar">
+                        Kegiatan yang diikuti oleh ratusan mahasiswa tingkat akhir ini menghadirkan praktisi kesehatan berpengalaman dari rumah sakit mitra untuk memberikan pelatihan langsung terkait standar pelayanan medis modern.
+                    </p>
+
+                    <!-- Foto 2 -->
+                    <div class="featured-image-container" style="margin: 20px 0;">
+                        <img id="previewFoto2" class="featured-image" src="https://placehold.co/800x400/dee2e6/495057?text=Foto+Kedua+Suasana+Workshop" alt="Foto Kedua">
+                        <p class="image-caption" id="outCaption2">Para peserta mahasiswa antusias mengikuti pemaparan materi dari narasumber ahli.</p>
+                    </div>
+
+                    <blockquote>
+                        "<span id="outQuote">Keterampilan klinis yang mumpuni adalah kunci utama dalam memberikan pelayanan kesehatan yang berorientasi pada keselamatan pasien. — dr. Ahmad Fauzi, Sp.An.</span>"
+                    </blockquote>
+
+                    <h3>Agenda & Materi Utama</h3>
+                    <div class="decision-box">
+                        <p id="outKeputusan" style="white-space: pre-wrap; margin-bottom: 0;">1. Pelatihan simulasi penanganan kegawatdaruratan medis (Triage & RJP).
+2. Standarisasi prosedur sterilisasi dan pencegahan infeksi nosokomial.
+3. Diskusi interaktif seputar etika profesi keperawatan di era digital.</p>
+                    </div>
+
+                    <h3>Kesimpulan & Penutup</h3>
+                    <p id="outPenutup">
+                        Acara ditutup dengan penyerahan sertifikat secara simbolis kepada peserta terbaik. Diharapkan kegiatan ini mampu membekali mahasiswa dengan keahlian praktis yang solutif di lapangan.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script JavaScript -->
+    <script>
+        // Efek Scroll Navbar
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Preloader Fade Out
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            setTimeout(function() {
+                preloader.classList.add('loader-fade-out');
+            }, 2000); 
+        });
+
+        // Logic JavaScript Generator Berita
+        let fileData1 = null;
+        let fileData2 = null;
+        let imgSrc1 = "https://placehold.co/800x400/e9ecef/495057?text=Foto+Utama+Workshop";
+        let imgSrc2 = "https://placehold.co/800x400/dee2e6/495057?text=Foto+Kedua+Suasana+Workshop";
+
+        function previewImage(event, previewId, fotoNum) {
+            const input = event.target;
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (fotoNum === 1) {
+                        imgSrc1 = e.target.result;
+                        fileData1 = file;
+                    } else {
+                        imgSrc2 = e.target.result;
+                        fileData2 = file;
+                    }
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updatePreview() {
+            document.getElementById('outKategori').innerText = document.getElementById('inKategori').value;
+            document.getElementById('outSubKategori').innerText = document.getElementById('inSubKategori').value;
+            document.getElementById('outJudul').innerText = document.getElementById('inJudul').value;
+            document.getElementById('outPenulis').innerText = document.getElementById('inPenulis').value;
+            document.getElementById('outTanggal').innerText = document.getElementById('inTanggal').value;
+            document.getElementById('outCaption1').innerText = document.getElementById('inCaption1').value;
+            document.getElementById('outCaption2').innerText = document.getElementById('inCaption2').value;
+            document.getElementById('outLead').innerText = document.getElementById('inLead').value;
+            document.getElementById('outPengantar').innerText = document.getElementById('inPengantar').value;
+            document.getElementById('outQuote').innerText = document.getElementById('inQuote').value;
+            document.getElementById('outKeputusan').innerText = document.getElementById('inKeputusan').value;
+            document.getElementById('outPenutup').innerText = document.getElementById('inPenutup').value;
+        }
+
+        function generateHTMLString(img1Name = 'foto1.jpg', img2Name = 'foto2.jpg') {
+            return `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${document.getElementById('inJudul').value}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px 20px; }
+        .article-container { max-width: 800px; margin: auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .article-title { font-size: 1.8rem; font-weight: 800; color: #212529; margin-bottom: 15px; }
+        .article-meta { font-size: 0.85rem; color: #6c757d; border-bottom: 1px solid #dee2e6; padding-bottom: 15px; margin-bottom: 25px; }
+        .featured-image { width: 100%; max-height: 350px; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
+        .image-caption { font-size: 0.8rem; color: #6c757d; font-style: italic; text-align: center; margin-bottom: 25px; }
+        .article-body p { font-size: 1.05rem; line-height: 1.7; color: #212529; margin-bottom: 20px; text-align: justify; }
+        .article-body p.lead { font-size: 1.15rem; font-weight: 600; color: #495057; }
+        blockquote { border-left: 4px solid #0b7285; padding: 15px 20px; background: #f8f9fa; margin: 25px 0; font-style: italic; color: #495057; }
+        .decision-box { background: #e3fafc; border: 1px solid #74c0fc; padding: 20px; border-radius: 8px; margin: 25px 0; }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <div class="breadcrumb mb-3 text-muted small">${document.getElementById('inKategori').value} &gt; ${document.getElementById('inSubKategori').value}</div>
+        <h1 class="article-title">${document.getElementById('inJudul').value}</h1>
+        <div class="article-meta">
+            <span><i class="fas fa-user"></i> ${document.getElementById('inPenulis').value}</span> | 
+            <span><i class="fas fa-calendar-alt"></i> ${document.getElementById('inTanggal').value}</span>
+        </div>
+        <div class="text-center">
+            <img src="${img1Name}" class="featured-image" alt="Foto Utama">
+            <p class="image-caption">${document.getElementById('inCaption1').value}</p>
+        </div>
+        <div class="article-body">
+            <p class="lead">${document.getElementById('inLead').value}</p>
+            <p>${document.getElementById('inPengantar').value}</p>
+            <div class="text-center" style="margin: 20px 0;">
+                <img src="${img2Name}" class="featured-image" alt="Foto Kedua">
+                <p class="image-caption">${document.getElementById('inCaption2').value}</p>
+            </div>
+            <blockquote>"${document.getElementById('inQuote').value}"</blockquote>
+            <h3>Agenda & Materi Utama</h3>
+            <div class="decision-box">
+                <p style="white-space: pre-wrap; margin-bottom: 0;">${document.getElementById('inKeputusan').value}</p>
+            </div>
+            <h3>Kesimpulan & Penutup</h3>
+            <p>${document.getElementById('inPenutup').value}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        async function downloadZIPPackage() {
+            const zip = new JSZip();
+            const imgName1 = fileData1 ? fileData1.name : "foto1.jpg";
+            const imgName2 = fileData2 ? fileData2.name : "foto2.jpg";
+
+            const htmlContent = generateHTMLString(imgName1, imgName2);
+            zip.file("index.html", htmlContent);
+
+            const imgFolder = zip.folder("img");
+            if (fileData1) imgFolder.file(imgName1, fileData1);
+            if (fileData2) imgFolder.file(imgName2, fileData2);
+
+            const content = await zip.generateAsync({ type: "blob" });
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "berita_workshop_keperawatan_package.zip";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert("File ZIP berhasil di-download!");
+        }
+
+        async function sendViaEmail() {
+            const btn = document.querySelector('.btn-email');
+            const originalText = btn.innerHTML;
+            
+            // Ubah teks tombol menjadi loading
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan ke Drive...';
+            btn.disabled = true;
+
+            try {
+                // Ambil nama file dan generate HTML
+                const imgName1 = fileData1 ? fileData1.name : "foto1.jpg";
+                const imgName2 = fileData2 ? fileData2.name : "foto2.jpg";
+                const htmlContent = generateHTMLString(imgName1, imgName2);
+                const judul = document.getElementById('inJudul').value;
+
+                // Cek apakah gambar menggunakan placeholder atau foto asli yang diupload (Base64)
+                const isImg1Uploaded = imgSrc1 !== "https://placehold.co/800x400/e9ecef/495057?text=Foto+Utama+Workshop";
+                const isImg2Uploaded = imgSrc2 !== "https://placehold.co/800x400/dee2e6/495057?text=Foto+Kedua+Suasana+Workshop";
+
+                // Susun data yang akan dikirim ke Google Drive (Apps Script)
+                const payload = {
+                    judul: judul,
+                    html: htmlContent,
+                    img1Base64: isImg1Uploaded ? imgSrc1 : null,
+                    img1Name: imgName1,
+                    img1Mime: fileData1 ? fileData1.type : null,
+                    img2Base64: isImg2Uploaded ? imgSrc2 : null,
+                    img2Name: imgName2,
+                    img2Mime: fileData2 ? fileData2.type : null
+                };
+
+                // PENTING: Ganti URL di bawah ini dengan Web App URL dari Google Apps Script Anda!
+                const scriptURL = 'https://script.google.com/home/my';
+
+                // Kirim data ke Apps Script
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    }
+                });
+
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    alert('Sukses! File berita telah di-generate dan masuk ke folder Drive "Pembuatan Berita Semua". Notifikasi email juga telah dikirim.');
+                    // Buka folder Drive otomatis di tab baru
+                    window.open(result.url, '_blank'); 
+                } else {
+                    alert('Gagal menyimpan: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan jaringan. Pastikan Anda telah memasukkan URL Web App Apps Script dengan benar pada kode scriptURL.');
+            } finally {
+                // Kembalikan tombol seperti semula
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

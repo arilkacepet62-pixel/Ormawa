@@ -3482,3 +3482,35 @@ footer.footer-custom {
         opacity: 1;
     }
 }
+/* ================================================================
+   MEMAKSA FOTO LIST BERITA TETAP DI SAMPING SAAT DI HP
+   ================================================================ */
+@media (max-width: 768px) {
+    .portal-list-item {
+        flex-direction: row !important; /* Memaksa tata letak tetap menyamping (kiri-kanan) */
+        align-items: flex-start !important; /* Menyejajarkan foto dan teks dari posisi atas */
+        padding: 12px !important;
+    }
+
+    .portal-list-thumb {
+        width: 100px !important; /* Mengecilkan sedikit ukuran foto agar muat di layar HP */
+        height: 75px !important;
+        flex-shrink: 0 !important; /* Mencegah foto menjadi gepeng/tergencet teks */
+    }
+
+    /* Menyesuaikan ukuran teks agar tetap enak dibaca di sebelah foto */
+    .portal-list-title {
+        font-size: 0.85rem !important;
+        margin-bottom: 5px !important;
+        line-height: 1.3 !important;
+    }
+
+    .portal-list-desc {
+        font-size: 0.75rem !important;
+        /* Kode ini membatasi deskripsi hanya 2 baris saja agar kotaknya rapi */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}

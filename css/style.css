@@ -3107,7 +3107,58 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0.5;
     transform: translateX(-50%);
 }
+/* ================================================================
+   PERBAIKAN RESPONSIVE LAYAR HP & POSISI JUDUL BERITA
+   ================================================================ */
 
+/* 1. Mengembalikan posisi Judul "Informasi Kampus & Ormawa" ke Kiri */
+.news-section-title {
+    text-align: left !important; /* Memaksa teks rata kiri/samping */
+    flex-grow: 1; /* Memastikan ruang panah navigasi tidak terganggu */
+}
+
+.news-section-header {
+    justify-content: flex-start !important;
+}
+
+/* 2. Mencegah layar HP jebol / melar ke samping (Anti Zoom-Out) */
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden; /* Mengunci total agar layar tidak bisa digeser ke samping */
+}
+
+.portal-news-wrapper {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.portal-grid-container {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Kunci agar grid (kolom berita & sidebar) patuh pada ukuran layar HP */
+.portal-main-col,
+.portal-sidebar-col {
+    min-width: 0 !important; /* Penting: Mencegah grid CSS meluap keluar layar */
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Memastikan slider berita di bawah tidak mendorong layar jadi lebar */
+.scrolling-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Perapian jarak kiri-kanan khusus di HP */
+@media (max-width: 768px) {
+    .portal-news-wrapper {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
 .layout-13 .connector-tree-1-2 .horizontal-bar-level2 {
     position: absolute;
     top: 15px;

@@ -141,8 +141,8 @@ nav ul li a:hover { color: var(--primary-color); }
     width: calc(100% - 40px); 
     margin: 120px auto 40px; 
     
-    /* --- TINGGI DITAMBAH SEDIKIT LAGI UNTUK DESKTOP --- */
-    height: 470px !important; /* Naik ke 470px */
+    /* --- TINGGI DITAMBAH 20px UNTUK DESKTOP --- */
+    height: 490px !important; /* Menjadi 490px */
     min-height: unset !important; 
     padding: 0 20px;
     
@@ -182,7 +182,7 @@ nav ul li a:hover { color: var(--primary-color); }
 /* Mode Tablet */
 @media (max-width: 992px) {
     .hero {
-        height: 380px !important; /* Naik ke 380px */
+        height: 400px !important; /* Menjadi 400px */
         margin-top: 110px;
         width: calc(100% - 30px); 
     }
@@ -191,8 +191,8 @@ nav ul li a:hover { color: var(--primary-color); }
 /* Mode HP (Smartphone) */
 @media (max-width: 768px) {
     .hero {
-        /* --- TINGGI DITAMBAH SEDIKIT LAGI UNTUK HP --- */
-        height: 300px !important; /* Naik ke 300px */
+        /* --- TINGGI DITAMBAH 20px UNTUK HP --- */
+        height: 320px !important; /* Menjadi 320px */
         margin-top: 85px;
         width: calc(100% - 20px); 
         padding: 0 10px;
@@ -217,8 +217,6 @@ nav ul li a:hover { color: var(--primary-color); }
         margin: 5px 4px !important;
     }
 }
-
-
 .hero::after {
     content: '';
     position: absolute;

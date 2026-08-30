@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Berita Fleksibel - ORMAWA STIKes KHAS</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #0b7285;
+            --primary-hover: #095c6a;
+            --bg-color: #f8f9fa;
+            --border-color: #ced4da;
+            --himesy-navy-deep: #050c18;
+            --himesy-navy-main: #0a192f;
+            --himesy-navy-light: #112240;
+            --himesy-gold-prime: #d4af37;
+            --himesy-light-slate: #ccd6f6;
+            --himesy-white: #ffffff;
+            --transition-smooth: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+            --shadow-premium: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #333;
+            padding-top: 76px; 
+        }
+
+        .generator-wrapper {
+            display: flex;
+            height: calc(100vh - 76px);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 480px;
+            background: #fff;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            position: relative;
+        }
+
+        .form-section-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .sidebar label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .sidebar input[type="text"],
+        .sidebar select,
+        .sidebar textarea {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.88rem;
+            transition: border-color 0.2s;
+        }
+
+        .sidebar input[type="text"]:focus,
+        .sidebar select:focus,
+        .sidebar textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11, 114, 133, 0.1);
+        }
+
+        .sidebar input[type="file"] {
+            font-size: 0.8rem;
+            width: 100%;
+        }
+
+        .sidebar textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .btn-action {
+            width: 100%;
+            color: white;
+            border: none;
+            padding: 11px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-zip { background-color: #2b8a3e; }
+        .btn-email { background-color: #3b5bdb; }
+        .btn-action:hover { opacity: 0.9; }
+
+        .btn-add-block {
+            background-color: #e9ecef;
+            border: 1px dashed #adb5bd;
+            color: #495057;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        .btn-add-block:hover {
+            background-color: #dee2e6;
+            color: #212529;
+        }
+
+        .dynamic-block {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .btn-delete-block {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            color: #e03131;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .instruction-box {
+            background: #e6fcf5;
+            border: 1px solid #c3fae8;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.82rem;
+            color: #0ca678;
+            line-height: 1.4;
+        }
+
+        /* Preview Area */
+        .preview-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            background-color: #e9ecef;
+        }
+
+        .news-page-preview {
+            background: #fff;
+            width: 100%;
+            max-width: 900px;
+            min-height: 1000px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .breadcrumb-news {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .breadcrumb-news a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .article-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #212529;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .article-meta img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            background: #fff;
+            padding: 1px;
+        }
+
+        .featured-image-container {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .featured-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .image-caption {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .article-body p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #212529;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .article-body p.lead {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .article-body blockquote {
+            border-left: 4px solid #0056b3;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            margin: 25px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #0056b3;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0056b3;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .decision-box {
+            background: #e3fafc;
+            border: 1px solid #74c0fc;
+            border-left: 4px solid #0b7285;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        @media (max-width: 992px) {
+            .generator-wrapper {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+            .sidebar { width: 100%; height: auto; }
+            .preview-area { height: auto; }
+            body { overflow: auto; }
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a192f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader-content { text-align: center; }
+
+        .logo-animation {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .logo-animation img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            animation: bounceLogo 2s infinite ease-in-out;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 3px solid #b89447;
+            border-radius: 50%;
+            animation: ripple 2s infinite;
+            z-index: 1;
+        }
+
+        .loader-text {
+            font-family: 'Montserrat', sans-serif;
+            color: #b89447;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            margin-top: 10px;
+        }
+
+        .letter {
+            display: inline-block;
+            animation: waveText 1.5s infinite;
+        }
+
+        .letter:nth-child(2) { animation-delay: 0.1s; }
+        .letter:nth-child(3) { animation-delay: 0.2s; }
+        .letter:nth-child(4) { animation-delay: 0.3s; }
+        .letter:nth-child(5) { animation-delay: 0.4s; }
+        .letter:nth-child(6) { animation-delay: 0.5s; }
+
+        @keyframes ripple {
+            0% { width: 100px; height: 100px; opacity: 1; }
+            100% { width: 200px; height: 200px; opacity: 0; }
+        }
+
+        @keyframes bounceLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes waveText {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        .loader-fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            padding: 0px 0;
+            transition: var(--transition-smooth);
+            z-index: 10000;
+        }
+
+        .navbar.scrolled {
+            background: rgba(5, 12, 24, 0.98) !important;
+            padding: 15px 0;
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid var(--himesy-gold-prime);
+        }
+
+        .navbar-brand img {
+            height: 70px;
+            transition: var(--transition-smooth);
+        }
+
+        .navbar.scrolled .navbar-brand img {
+            height: 50px;
+        }
+
+        .nav-link {
+            color: var(--himesy-white) !important;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-left: 15px;
+            position: relative;
+            padding: 5px 0 !important;
+            transform: translateY(-4px);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--himesy-gold-prime);
+            transition: var(--transition-smooth);
+        }
+
+        .nav-link:hover::before, .nav-link.active::before {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+      <div class="loader-content">
+        <div class="logo-animation">
+          <img src="img/download logo stikes.png" alt="Logo STIKes KHAS" />
+          <div class="pulse-ring"></div>
+        </div>
+        <div class="loader-text">
+          <span class="letter">O</span>
+          <span class="letter">R</span>
+          <span class="letter">M</span>
+          <span class="letter">A</span>
+          <span class="letter">W</span>
+          <span class="letter">A</span>
+          <span class="letter"></span>
+          <span class="letter">S</span>
+          <span class="letter">T</span>
+          <span class="letter">I</span>
+          <span class="letter">K</span>
+          <span class="letter">e</span>
+          <span class="letter">s</span>
+          <span class="letter"></span>
+          <span class="letter">K</span>
+          <span class="letter">H</span>
+          <span class="letter">A</span>
+          <span class="letter">S</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img src="img/download logo stikes.png" alt="Logo HIMESY KHAS" class="me-3" />
+          <span class="fw-bold fs-4">ORMAWA STIKes KHAS</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- GENERATOR AREA -->
+    <div class="generator-wrapper">
+        <!-- FORM PANEL KIRI -->
+        <div class="sidebar">
+            <h2>Generator Berita Lengkap</h2>
+            
+            <div class="instruction-box">
+                <strong>Panduan:</strong><br>
+                1. Pilih Penulis dari opsi yang tersedia.<br>
+                2. Pilih file foto logo dari perangkat Anda pada kolom <strong>Unggah Logo Manual</strong>.<br>
+                3. Klik "Terbitkan & Simpan ke Website" untuk mengirim ke database.
+            </div>
+            
+            <!-- HEADER INFO -->
+            <div class="form-section">
+                <div class="form-section-title">Identitas Organisasi & Logo</div>
+                
+                <!-- 1. PILIH PENULIS / MEDIA -->
+                <div class="form-group">
+                    <label>Penulis / Media Organisasi</label>
+                    <input type="text" id="inPenulis" list="mediaList" class="form-control" oninput="updatePreview()" value="Media HIMAFARMA" placeholder="Pilih atau ketik nama media sendiri...">
+                    <datalist id="mediaList">
+                        <option value="Media HIMAFARMA">
+                        <option value="Media DPM">
+                        <option value="Media BEM">
+                        <option value="Media HIMAGI">
+                        <option value="Admin Utama STIKes">
+                    </datalist>
+                </div>
+
+                <!-- 2. UPLOAD LOGO MANUAL -->
+                <div class="form-group">
+                    <label>Unggah Logo Organisasi (File Gambar)</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <img id="previewMiniLogo" src="img/download logo stikes.png" alt="Mini Logo" style="width: 38px; height: 38px; object-fit: contain; border-radius: 6px; border: 1px solid #ced4da; background: #fff; padding: 2px;">
+                        <input type="file" id="inputManualLogo" class="form-control" accept="image/*" onchange="handleManualLogo(event)">
+                    </div>
+                    <small class="text-muted" style="font-size: 0.75rem; display: block; margin-top: 4px;">Pilih file logo (.png / .jpg / .jpeg) dari perangkat laptop/HP.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input type="text" id="inKategori" value="Akademik & Kesehatan" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Sub Kategori / Nama Agenda</label>
+                    <input type="text" id="inSubKategori" value="Workshop Keperawatan 2025" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Judul Berita Utama</label>
+                    <input type="text" id="inJudul" value="STIKes Khas Kempek Gelar Workshop Keterampilan Klinis untuk Tingkatkan Kompetensi Mahasiswa Keperawatan" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Publikasi</label>
+                    <input type="text" id="inTanggal" value="Selasa, 21 Oktober 2025" oninput="updatePreview()">
+                </div>
+            </div>
+
+            <!-- FOTO UTAMA & PEMBUKA -->
+            <div class="form-section">
+                <div class="form-section-title">Foto Utama & Pembuka</div>
+                <div class="form-group">
+                    <label>Foto Utama (Header Berita)</label>
+                    <input type="file" id="inputFoto1" accept="image/*" onchange="previewImage(event, 'previewFoto1', 1)">
+                </div>
+                <div class="form-group">
+                    <label>Caption Foto Utama</label>
+                    <input type="text" id="inCaption1" value="Dokumentasi: Sesi praktik langsung penanganan pasien gawat darurat di laboratorium." oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Paragraf Pembuka (Teks Tebal / Lead)</label>
+                    <textarea id="inLead" oninput="updatePreview()">Dalam upaya mencetak tenaga kesehatan yang profesional dan siap terjun ke dunia kerja, STIKes Khas Kempek Cirebon sukses menyelenggarakan Workshop Keterampilan Klinis Keperawatan bertaraf nasional pada Selasa, 21 Oktober 2025.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Paragraf Pengantar Tokoh / Kegiatan</label>
+                    <textarea id="inPengantar" oninput="updatePreview()">Kegiatan yang diikuti oleh ratusan mahasiswa tingkat akhir ini menghadirkan praktisi kesehatan berpengalaman dari rumah sakit mitra untuk memberikan pelatihan langsung terkait standar pelayanan medis modern.</textarea>
+                </div>
+            </div>
+
+            <!-- BLOK KONTEN TAMBAHAN (DINAMIS) -->
+            <div class="form-section">
+                <div class="form-section-title">Blok Konten Tambahan</div>
+                <div id="dynamicContainer">
+                    <div class="dynamic-block" data-type="photo" id="defaultBlockFoto2">
+                        <button class="btn-delete-block" onclick="removeBlock(this)"><i class="fas fa-trash"></i></button>
+                        <label>Foto Dokumentasi Kedua</label>
+                        <input type="file" accept="image/*" onchange="handleDynamicPhoto(event, this)">
+                        <input type="text" class="mt-2" placeholder="Caption foto kedua..." value="Para peserta mahasiswa antusias mengikuti pemaparan materi dari narasumber ahli." oninput="updatePreview()">
+                    </div>
+
+                    <div class="dynamic-block" data-type="quote" id="defaultBlockQuote">
+                        <button class="btn-delete-block" onclick="removeBlock(this)"><i class="fas fa-trash"></i></button>
+                        <label>Kutipan / Quote Tokoh</label>
+                        <textarea placeholder="Tulis kutipan..." oninput="updatePreview()">Keterampilan klinis yang mumpuni adalah kunci utama dalam memberikan pelayanan kesehatan yang berorientasi pada keselamatan pasien. — dr. Ahmad Fauzi, Sp.An.</textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn-add-block" onclick="addParagraphBlock()"><i class="fas fa-plus"></i> Tambah Paragraf</button>
+                    <button type="button" class="btn-add-block" onclick="addPhotoBlock()"><i class="fas fa-camera"></i> Tambah Foto</button>
+                    <button type="button" class="btn-add-block" onclick="addQuoteBlock()"><i class="fas fa-quote-left"></i> Tambah Quote</button>
+                </div>
+            </div>
+
+            <!-- BAGIAN AGENDA / KEPUTUSAN -->
+            <div class="form-section">
+                <div class="form-section-title">Bagian Agenda & Kotak Poin</div>
+                <div class="form-group">
+                    <label>Judul Bagian Poin</label>
+                    <input type="text" id="inJudulAgenda" value="Agenda & Materi Utama" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Isi Poin / Keputusan (Dalam Kotak Highlight)</label>
+                    <textarea id="inKeputusan" style="min-height: 90px;" oninput="updatePreview()">1. Pelatihan simulasi penanganan kegawatdaruratan medis (Triage & RJP).
+2. Standarisasi prosedur sterilisasi dan pencegahan infeksi nosokomial.
+3. Diskusi interaktif seputar etika profesi keperawatan di era digital.</textarea>
+                </div>
+            </div>
+
+            <!-- BAGIAN PENUTUP -->
+            <div class="form-section">
+                <div class="form-section-title">Bagian Penutup</div>
+                <div class="form-group">
+                    <label>Judul Bagian Penutup</label>
+                    <input type="text" id="inJudulPenutup" value="Kesimpulan & Penutup" oninput="updatePreview()">
+                </div>
+                <div class="form-group">
+                    <label>Paragraf Penutup</label>
+                    <textarea id="inPenutup" oninput="updatePreview()">Acara ditutup dengan penyerahan sertifikat secara simbolis kepada peserta terbaik. Diharapkan kegiatan ini mampu membekali mahasiswa dengan keahlian praktis yang solutif di lapangan.</textarea>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <button class="btn-action btn-danger" onclick="simpanKeSupabase()" style="background-color: #0b7285;">
+                <i class="fas fa-database"></i> Terbitkan & Simpan ke Website
+            </button>
+            <button class="btn-action btn-zip" onclick="downloadZIPPackage()">
+                <i class="fas fa-file-archive"></i> Download Berkas ZIP
+            </button>
+        </div>
+
+        <!-- PREVIEW PANEL KANAN -->
+        <div class="preview-area">
+            <div class="news-page-preview">
+                <div class="breadcrumb-news">
+                    <a href="#">Berita</a> > <a href="#" id="outKategori">Akademik & Kesehatan</a> > <span id="outSubKategori">Workshop Keperawatan 2025</span>
+                </div>
+
+                <h1 class="article-title" id="outJudul">STIKes Khas Kempek Gelar Workshop Keterampilan Klinis untuk Tingkatkan Kompetensi Mahasiswa Keperawatan</h1>
+
+                <div class="article-meta">
+                    <img id="outLogoMeta" src="img/download logo stikes.png" alt="Logo Organisasi">
+                    <span><i class="fas fa-user"></i> <strong id="outPenulis">Humas HIMAFARMA</strong></span>
+                    <span><i class="fas fa-calendar-alt"></i> <span id="outTanggal">Selasa, 21 Oktober 2025</span></span>
+                </div>
+
+                <!-- Foto 1 -->
+                <div class="featured-image-container">
+                    <img id="previewFoto1" class="featured-image" src="https://placehold.co/800x400/e9ecef/495057?text=Foto+Utama+Workshop" alt="Foto Utama">
+                    <p class="image-caption" id="outCaption1">Dokumentasi: Sesi praktik langsung penanganan pasien gawat darurat di laboratorium.</p>
+                </div>
+
+                <div class="article-body">
+                    <p class="lead" id="outLead">
+                        Dalam upaya mencetak tenaga kesehatan yang profesional dan siap terjun ke dunia kerja, STIKes Khas Kempek Cirebon sukses menyelenggarakan Workshop Keterampilan Klinis Keperawatan bertaraf nasional pada Selasa, 21 Oktober 2025.
+                    </p>
+
+                    <p id="outPengantar">
+                        Kegiatan yang diikuti oleh ratusan mahasiswa tingkat akhir ini menghadirkan praktisi kesehatan berpengalaman dari rumah sakit mitra untuk memberikan pelatihan langsung terkait standar pelayanan medis modern.
+                    </p>
+
+                    <div id="outDynamicContent"></div>
+
+                    <h3 id="outJudulAgenda">Agenda & Materi Utama</h3>
+                    <div class="decision-box">
+                        <p id="outKeputusan" style="white-space: pre-wrap; margin-bottom: 0;">1. Pelatihan simulasi penanganan kegawatdaruratan medis (Triage & RJP).
+2. Standarisasi prosedur sterilisasi dan pencegahan infeksi nosokomial.
+3. Diskusi interaktif seputar etika profesi keperawatan di era digital.</p>
+                    </div>
+
+                    <h3 id="outJudulPenutup">Kesimpulan & Penutup</h3>
+                    <p id="outPenutup">
+                        Acara ditutup dengan penyerahan sertifikat secara simbolis kepada peserta terbaik. Diharapkan kegiatan ini mampu membekali mahasiswa dengan keahlian praktis yang solutif di lapangan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+   <script>
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://acigxznxktbdptezfbuk.supabase.co', 
+            'sb_publishable_GaLfQyvfjzJCgVLBAzWerA_7_OgU6ZS'
+        );
+
+        // ==========================================
+        // PENGECEKAN LOGIN (SATPAM HALAMAN)
+        // ==========================================
+        async function cekStatusLogin() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            // Kalau tidak ada identitas login yang terdeteksi, tendang ke halaman login
+            if (!session) {
+                alert("Akses Ditolak! Anda harus login terlebih dahulu.");
+                window.location.href = "login.html";
+            }
+        }
+        
+        // Jalankan pengecekan secara instan
+        cekStatusLogin();
+        // ==========================================
+
+       let imgSrc1 = "https://placehold.co/800x400/e9ecef/495057?text=Foto+Utama+Workshop";
+        let fileData1 = null;
+        let activeLogoData = "img/download logo stikes.png"; // Tambahkan ini
+        let logoFile = null;                               // Tambahkan ini
+
+        // ==========================================================
+        // FUNGSI BARU: UPLOAD FILE KE SUPABASE STORAGE
+        // ==========================================================
+        async function uploadFileKeSupabase(file, folderName) {
+            if (!file) return null;
+            
+            const fileExt = file.name.split('.').pop();
+            // Bikin nama file unik agar tidak bentrok (contoh: utama/163456_abcde.jpg)
+            const fileName = `${folderName}/${Date.now()}_${Math.random().toString(36).substring(2,7)}.${fileExt}`;
+
+            // Upload ke bucket bernama 'gambar_berita'
+            const { data, error } = await supabaseClient.storage
+                .from('gambar_berita') 
+                .upload(fileName, file);
+
+            if (error) {
+                console.error("Gagal upload gambar:", error);
+                throw new Error("Gagal upload gambar: " + error.message);
+            }
+
+            // Minta URL publiknya untuk disimpan ke Database
+            const { data: publicUrlData } = supabaseClient.storage
+                .from('gambar_berita')
+                .getPublicUrl(fileName);
+
+            return publicUrlData.publicUrl;
+        }
+
+        // ==========================================================
+        // PREVIEW LOKAL (TETAP PAKAI BASE64 BIAR CEPAT DI LAYAR)
+        // ==========================================================
+        function handleManualLogo(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                logoFile = input.files[0]; // Simpan file aslinya untuk nanti
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    activeLogoData = e.target.result;
+                    document.getElementById('previewMiniLogo').src = activeLogoData;
+                    document.getElementById('outLogoMeta').src = activeLogoData;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewImage(event, previewId, fotoNum) {
+            const input = event.target;
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                fileData1 = file; // Simpan file aslinya untuk nanti
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imgSrc1 = e.target.result;
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleDynamicPhoto(event, inputElem) {
+            if (inputElem.files && inputElem.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    inputElem.dataset.base64 = e.target.result;
+                    updatePreview();
+                };
+                reader.readAsDataURL(inputElem.files[0]);
+            }
+        }
+
+        // ==========================================================
+        // FITUR TAMBAH BLOK (PARAGRAF, FOTO, QUOTE)
+        // ==========================================================
+        function addParagraphBlock() {
+            const container = document.getElementById('dynamicContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-block';
+            div.dataset.type = 'paragraph';
+            div.innerHTML = `
+                <button class="btn-delete-block" onclick="removeBlock(this)"><i class="fas fa-trash"></i></button>
+                <label>Paragraf Tambahan</label>
+                <textarea placeholder="Tulis paragraf tambahan di sini..." oninput="updatePreview()"></textarea>
+            `;
+            container.appendChild(div);
+            updatePreview();
+        }
+
+        function addPhotoBlock() {
+            const container = document.getElementById('dynamicContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-block';
+            div.dataset.type = 'photo';
+            div.innerHTML = `
+                <button class="btn-delete-block" onclick="removeBlock(this)"><i class="fas fa-trash"></i></button>
+                <label>Foto Dokumentasi Tambahan</label>
+                <input type="file" accept="image/*" onchange="handleDynamicPhoto(event, this)">
+                <input type="text" class="mt-2" placeholder="Caption foto..." oninput="updatePreview()">
+            `;
+            container.appendChild(div);
+            updatePreview();
+        }
+
+        function addQuoteBlock() {
+            const container = document.getElementById('dynamicContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-block';
+            div.dataset.type = 'quote';
+            div.innerHTML = `
+                <button class="btn-delete-block" onclick="removeBlock(this)"><i class="fas fa-trash"></i></button>
+                <label>Kutipan / Quote Tambahan</label>
+                <textarea placeholder="Tulis kutipan baru..." oninput="updatePreview()"></textarea>
+            `;
+            container.appendChild(div);
+            updatePreview();
+        }
+
+        function removeBlock(btn) {
+            btn.parentElement.remove();
+            updatePreview();
+        }
+
+        function updatePreview() {
+            document.getElementById('outKategori').innerText = document.getElementById('inKategori').value;
+            document.getElementById('outSubKategori').innerText = document.getElementById('inSubKategori').value;
+            document.getElementById('outJudul').innerText = document.getElementById('inJudul').value;
+            document.getElementById('outPenulis').innerText = document.getElementById('inPenulis').value;
+            document.getElementById('outLogoMeta').src = activeLogoData;
+
+            document.getElementById('outTanggal').innerText = document.getElementById('inTanggal').value;
+            document.getElementById('outCaption1').innerText = document.getElementById('inCaption1').value;
+            document.getElementById('outLead').innerText = document.getElementById('inLead').value;
+            document.getElementById('outPengantar').innerText = document.getElementById('inPengantar').value;
+
+            document.getElementById('outJudulAgenda').innerText = document.getElementById('inJudulAgenda').value;
+            document.getElementById('outKeputusan').innerText = document.getElementById('inKeputusan').value;
+            document.getElementById('outJudulPenutup').innerText = document.getElementById('inJudulPenutup').value;
+            document.getElementById('outPenutup').innerText = document.getElementById('inPenutup').value;
+
+            const dynamicContainer = document.getElementById('dynamicContainer');
+            const outDynamic = document.getElementById('outDynamicContent');
+            let dynamicHTML = '';
+
+            const blocks = dynamicContainer.querySelectorAll('.dynamic-block');
+            blocks.forEach(block => {
+                const type = block.dataset.type;
+                if (type === 'paragraph') {
+                    const text = block.querySelector('textarea').value;
+                    if (text.trim()) dynamicHTML += `<p>${text}</p>`;
+                } else if (type === 'quote') {
+                    const quote = block.querySelector('textarea').value;
+                    if (quote.trim()) dynamicHTML += `<blockquote>"${quote}"</blockquote>`;
+                } else if (type === 'photo') {
+                    const input = block.querySelector('input[type="file"]');
+                    const caption = block.querySelector('input[type="text"]').value;
+                    // Tampilkan preview base64 di layar kanan
+                    const src = input.dataset.base64 || 'https://placehold.co/800x400/dee2e6/495057?text=Foto+Tambahan';
+                    dynamicHTML += `
+                        <div class="featured-image-container my-3 text-center">
+                            <img class="featured-image" src="${src}" alt="Foto Tambahan">
+                            <p class="image-caption">${caption}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            outDynamic.innerHTML = dynamicHTML;
+        }
+
+        // ==========================================================
+        // FUNGSI RAKIT HTML (MENGUBAH FOTO TAMBAHAN JADI URL)
+        // ==========================================================
+        async function buildFullHTML() {
+            const lead = document.getElementById('inLead').value;
+            const pengantar = document.getElementById('inPengantar').value;
+            const judulAgenda = document.getElementById('inJudulAgenda').value;
+            const keputusan = document.getElementById('inKeputusan').value;
+            const judulPenutup = document.getElementById('inJudulPenutup').value;
+            const penutup = document.getElementById('inPenutup').value;
+
+            let dynamicBody = '';
+            const blocks = document.querySelectorAll('#dynamicContainer .dynamic-block');
+            
+            for (let block of blocks) {
+                const type = block.dataset.type;
+                if (type === 'paragraph') {
+                    const text = block.querySelector('textarea').value;
+                    if (text.trim()) dynamicBody += `<p>${text}</p>`;
+                } else if (type === 'quote') {
+                    const quote = block.querySelector('textarea').value;
+                    if (quote.trim()) dynamicBody += `<blockquote>"${quote}"</blockquote>`;
+                } else if (type === 'photo') {
+                    const input = block.querySelector('input[type="file"]');
+                    const caption = block.querySelector('input[type="text"]').value;
+                    let src = '';
+                    
+                    // Kalau ada file foto tambahan, upload dulu ke Supabase Storage
+                    if (input.files && input.files[0]) {
+                        src = await uploadFileKeSupabase(input.files[0], 'tambahan');
+                    }
+                    
+                    // Masukkan URL ke dalam struktur HTML
+                    if (src) {
+                        dynamicBody += `
+                            <div class="featured-image my-4">
+                                <img src="${src}" alt="Dokumentasi" style="width: 100%; max-height: 450px; object-fit: cover; border-radius: 8px;">
+                                <p class="caption">${caption}</p>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            return `
+                <p class="lead">${lead}</p>
+                <p>${pengantar}</p>
+                ${dynamicBody}
+                <h3>${judulAgenda}</h3>
+                <div class="decision-box">
+                    <p style="white-space: pre-wrap; margin-bottom: 0;">${keputusan}</p>
+                </div>
+                <h3>${judulPenutup}</h3>
+                <p>${penutup}</p>
+            `;
+        }
+
+        // ==========================================================
+        // PROSES UTAMA SAAT KLIK "TERBITKAN"
+        // ==========================================================
+        async function simpanKeSupabase() {
+            const btn = document.querySelector('.btn-danger');
+            const originalText = btn ? btn.innerHTML : '';
+            
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sedang Mengonversi & Mengupload...';
+                btn.disabled = true;
+            }
+
+            try {
+                const authorText = document.getElementById('inPenulis').value;
+                const judul = document.getElementById('inJudul').value;
+                const tanggal = document.getElementById('inTanggal').value;
+                const kategoriText = document.getElementById('inKategori').value;
+                const subKategoriText = document.getElementById('inSubKategori').value;
+                
+                // 1. Upload Foto Utama dan Logo ke Storage dulu
+                let finalImgUrl = imgSrc1; 
+                let finalLogoUrl = activeLogoData;
+
+                if (fileData1) {
+                    finalImgUrl = await uploadFileKeSupabase(fileData1, 'utama');
+                }
+                if (logoFile) {
+                    finalLogoUrl = await uploadFileKeSupabase(logoFile, 'logo');
+                }
+
+                // 2. Rakit HTML sekalian nge-upload foto tambahan (jika ada)
+                const fullHTML = await buildFullHTML();
+
+                // 3. Simpan ke database artikel dengan URL yang sudah dikonversi 
+                const { data, error } = await supabaseClient
+                    .from('articles')
+                    .insert([
+                        { 
+                            title: judul, 
+                            author: authorText, 
+                            author_logo: finalLogoUrl,
+                            image: finalImgUrl, 
+                            content: fullHTML, 
+                            date: tanggal,
+                            kategori: kategoriText,       
+                            sub_kategori: subKategoriText 
+                        }
+                    ]);
+
+                if (error) throw error;
+                
+                // 4. Sukses! Hapus memori browser agar di halaman berita nanti langsung reset & muncul
+                sessionStorage.clear(); 
+                
+                alert("Berhasil! Foto sukses dikonversi menjadi URL dan berita sudah diterbitkan.");
+                
+                // 5. Otomatis lompat ke halaman berita tanpa jeda nunggu 20 detik
+                window.location.href = "berita.html";
+                
+            } catch (error) {
+                console.error("Error simpan:", error);
+                alert("Gagal menyimpan ke database: " + error.message);
+            } finally {
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        async function downloadZIPPackage() {
+            alert("Fitur Download ZIP dinonaktifkan sementara karena sistem sekarang sudah menggunakan Storage URL secara langsung.");
+        }
+
+        window.addEventListener("scroll", () => {
+            const navbar = document.querySelector(".navbar");
+            if (!navbar) return;
+            if (window.scrollY > 100) {
+                navbar.classList.add("scrolled");
+            } else {
+                navbar.classList.remove("scrolled");
+            }
+        });
+
+        window.addEventListener("load", function () {
+            const preloader = document.getElementById("preloader");
+            if (preloader) {
+                setTimeout(function () {
+                    preloader.classList.add("loader-fade-out");
+                }, 1000);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePreview();
+        });
+    </script>
+    
+</body>
+</html>

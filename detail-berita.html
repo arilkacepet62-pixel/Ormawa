@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Ormawa STIKes - Detail Berita</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css"> 
+    <link rel="stylesheet" type="text/css" href="berita/style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .article-body p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #212529;
+            margin-bottom: 20px;
+            text-align: justify;
+            white-space: pre-line;
+        }
+        .news-article {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .article-body p.lead {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .article-body blockquote {
+            border-left: 4px solid #0056b3;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            margin: 25px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #0056b3;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .article-body h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0056b3;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .article-body .decision-box {
+            background: #e3fafc;
+            border: 1px solid #74c0fc;
+            border-left: 4px solid #0b7285;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        .article-body .decision-box p {
+            white-space: pre-wrap;
+            margin-bottom: 0;
+            color: #212529;
+        }
+
+        .featured-image img {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .featured-image .caption {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .author-avatar {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-content">
+            <div class="logo-animation">
+                <img src="img/download logo stikes.png" alt="Logo STIKes KHAS">
+                <div class="pulse-ring"></div>
+            </div>
+            <div class="loader-text">
+                <span class="letter">O</span>
+                <span class="letter">R</span>
+                <span class="letter">M</span>
+                <span class="letter">A</span>
+                <span class="letter">W</span>
+                <span class="letter">A</span>
+                <span class="letter"></span>
+                <span class="letter">S</span>
+                <span class="letter">T</span>
+                <span class="letter">I</span>
+                <span class="letter">K</span>
+                <span class="letter">e</span>
+                <span class="letter">s</span>
+                <span class="letter"></span>
+                <span class="letter">K</span>
+                <span class="letter">H</span>
+                <span class="letter">A</span>
+                <span class="letter">S</span>
+            </div>
+         </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="img/download logo stikes.png" alt="Logo HIMESY KHAS" class="me-3">
+                <span class="fw-bold fs-4">ORMAWA STIKes KHAS</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#himesyNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="himesyNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Tentang Kami<i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="tentangkami.html">Tentang Kami</a></li>
+                            <li><a class="dropdown-item" href="tugas-fungsi.html">Tugas & fungsi</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Struktur<i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><span class="dropdown-header text-warning fw-bold small">PIMPINAN</span></li>
+                            <li><a class="dropdown-item" href="https://www.stikeskhas.ac.id/">STIKes KHAS KEMPEK</a></li>
+                            <li><hr class="dropdown-divider bg-white opacity-25"></li>
+                            <li><span class="dropdown-header text-warning fw-bold small">DAFTAR ORMAWA</span></li>
+                            <li><a class="dropdown-item" href="Struktur-bem.html">DPM (Dewan Perwakilan Mahasiswa)</a></li>
+                            <li><a class="dropdown-item" href="Struktur-bem.html">BEM (Badan Eksekutif Mahasiswa)</a></li>
+                            <li><a class="dropdown-item" href="struktur-himafarma.html">HIMAFARMA (Himpunan Mahasiswa Farmasi)</a></li>
+                            <li><a class="dropdown-item" href="struktur-himagi.html">HIMAGI (Himpunan Mahasiswa Gizi)</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="berita.html">BERITA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kotak-Aspirasi.html">KOTAK ASPIRASI</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="main-container-grid">
+            
+            <!-- KOLOM KIRI (ARTIKEL DINAMIS) -->
+            <div class="main-content-area">
+                <article class="news-article" style="margin: 0;" id="articleArea">
+                    <div class="article-header-container">
+                       <header class="article-header">
+                            <!-- Breadcrumb -->
+                            <nav class="breadcrumb-new">
+                                <a href="berita.html">Berita</a>
+                                <i class="fas fa-chevron-right chevron-grey"></i>
+                                <a href="#" id="breadCategory">Kategori</a>
+                                <i class="fas fa-chevron-right chevron-grey"></i>
+                                <a href="#" id="breadSubCategory">Sub Kategori</a>
+                            </nav>
+                                                    
+                            <!-- Judul Utama Dinamis -->
+                            <h1 class="article-title-new" id="artTitle">Memuat Judul Berita...</h1>
+                            
+                            <!-- Baris Tanggal & Lokasi -->
+                            <div class="article-date-location">
+                                <span><i class="fas fa-calendar-alt"></i> <span id="artDate">--/--/----</span></span>
+                                <span><i class="fas fa-map-marker-alt"></i> STIKes KHAS Kempek</span>
+                            </div>
+
+                            <!-- Kotak Profil Penulis Dinamis -->
+                            <div class="author-meta-box">
+                                <div class="author-info-left">
+                                    <img id="artAuthorLogo" src="img/download logo stikes.png" alt="Logo Organisasi" class="author-avatar">
+                                    <div class="author-details">
+                                        <span class="author-name">Oleh <a href="#" id="artAuthor">Tim Media</a></span>
+                                        <span class="publish-date">Diterbitkan oleh Tim Media</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="share-right">
+                                    <button onclick="shareToWhatsApp()" class="btn-share-minimalist">
+                                        <i class="fas fa-share-nodes"></i> Share
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+
+                    <!-- Foto Utama Dinamis -->
+                    <div class="featured-image" id="featuredImgContainer">
+                        <img id="artImage" src="https://placehold.co/800x400" alt="Dokumentasi Berita">
+                        <p class="caption" id="artCaption">Dokumentasi Kegiatan STIKes KHAS Kempek.</p>
+                    </div>
+
+                    <!-- Isi Berita Dinamis -->
+                    <div class="article-body" id="artContent">
+                        <p class="text-muted">Sedang mengambil isi artikel dari database...</p>
+                    </div>
+                </article>
+
+                <!-- Tombol Kembali & Share -->
+                <div class="article-footer d-flex justify-content-between align-items-center flex-wrap gap-3 bg-white p-4 rounded-3 shadow-sm mt-4">
+                    <a href="berita.html" class="btn btn-primary m-0"><i class="fas fa-arrow-left"></i> Kembali ke Berita</a>
+                    
+                    <div class="share-buttons d-flex align-items-center gap-2">
+                        <span class="fw-bold me-2">Bagikan:</span>
+                        <a href="#" onclick="shareToWhatsApp()" class="btn text-white m-0" style="background-color: #25D366;" title="Bagikan ke WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" onclick="shareToFacebook()" class="btn text-white m-0" style="background-color: #1877F2;" title="Bagikan ke Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <button onclick="copyToClipboard()" class="btn btn-secondary m-0" title="Salin Tautan">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN (SIDEBAR) -->
+            <aside class="news-sidebar">
+                
+                <!-- Widget Terpopuler Dinamis -->
+                <div class="sidebar-widget">
+                    <h3>Populer / Terbaru</h3>
+                    <div class="popular-list" id="dynamicPopularList">
+                        <p class="text-muted small">Memuat berita terbaru...</p>
+                    </div>
+                </div>
+
+                <!-- Kotak Iklan / Banner Samping -->
+                <div class="portal-sidebar-widget text-center" style="background: #e3fafc; border: 1px dashed #74c0fc;">
+                    <span style="font-size: 10px; color: #868e96; display: block; margin-bottom: 5px;">Advertisement</span>
+                    <div style="padding: 20px 10px;">
+                        <h5 style="font-size: 1.1rem; color: #0b7285; font-weight: 700; margin-bottom: 8px;">STIKes KHAS EXPO 2027</h5>
+                        <p style="font-size: 0.8rem; color: #495057; margin-bottom: 12px;">Pekan raya kesehatan dan kreativitas mahasiswa seluruh program studi.</p>
+                        <a href="" class="btn btn-sm btn-primary fw-bold" style="font-size: 0.75rem;">Info Selengkapnya</a>
+                    </div>
+                </div>
+                
+                <!-- Kotak Iklan / Banner Samping (Creator Hub) -->
+                <div class="portal-sidebar-widget text-center" style="background: #e3fafc; border: 1px dashed #74c0fc; margin-top: 20px;">
+                    <span style="font-size: 10px; color: #868e96; display: block; margin-bottom: 5px;">Creator Hub</span>
+                    <div style="padding: 20px 10px">
+                        <h5 style="font-size: 1.1rem; color: #0b7285; font-weight: 700; margin-bottom: 8px;">Publikasikan Karyamu!</h5>
+                        <p style="font-size: 0.8rem; color: #495057; margin-bottom: 12px;">Mari berkolaborasi membangun pusat informasi yang aktif di STIKes KHAS. Autentikasi diperlukan sebelum kamu bisa mengunggah postingan.</p>
+                        <a href="login.html" class="btn btn-sm btn-primary fw-bold" style="font-size: 0.75rem;">Login & Tulis Artikel</a>
+                    </div>
+                </div>
+                
+                <!-- KOTAK KOMENTAR KE GMAIL -->
+                <div class="portal-sidebar-widget" style="background: #ffffff; border: 1px solid #dee2e6; border-radius: 8px; margin-top: 20px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <h5 style="font-size: 1.05rem; color: #0056b3; font-weight: 700; margin-bottom: 6px;">
+                        <i class="fas fa-comments"></i> Tinggalkan Komentar
+                    </h5>
+                    <p style="font-size: 0.78rem; color: #6c757d; margin-bottom: 14px; line-height: 1.4;"></p>
+
+                    <!-- Form Komentar -->
+                    <form id="commentForm" action="https://formspree.io/f/xppavrel" method="POST">
+                        <div class="mb-2">
+                            <label style="font-size: 0.75rem; font-weight: 600; color: #495057; margin-bottom: 2px;">Nama Lengkap</label>
+                            <input type="text" name="Nama_Pengirim" class="form-control form-control-sm" placeholder="Contoh: zaed" required style="font-size: 0.8rem;">
+                        </div>
+
+                        <div class="mb-2">
+                            <label style="font-size: 0.75rem; font-weight: 600; color: #495057; margin-bottom: 2px;">Email atau Nomor WA</label>
+                            <input type="text" name="Kontak_Email_atau_WA" class="form-control form-control-sm" placeholder="Contoh: user@gmail.com / 08123456789" required style="font-size: 0.8rem;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label style="font-size: 0.75rem; font-weight: 600; color: #495057; margin-bottom: 2px;">Isi Komentar</label>
+                            <textarea name="Isi_Komentar" class="form-control form-control-sm" rows="3" placeholder="Tulis komentar/masukan Anda..." required style="font-size: 0.8rem; resize: none;"></textarea>
+                        </div>
+
+                        <button type="submit" id="btnKirimKomentar" class="btn btn-sm btn-primary w-100 fw-bold" style="font-size: 0.82rem; margin: 0; padding: 9px; border-radius: 6px;">
+                            <i class="fas fa-paper-plane me-1"></i> Kirim Komentar
+                        </button>
+                    </form>
+
+                    <!-- Notifikasi Sukses / Gagal -->
+                    <div id="commentStatus" class="small text-center mt-2 fw-semibold" style="display: none; font-size: 0.8rem;"></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h4>ORMAWA STIKes Khas </h4>
+                <p>Membangun Organisasi Yang Tertib Administrasi Dan Berintegritas</p>
+                <div class="social-links" style="margin-top: 15px;">
+                    <a href="https://www.instagram.com/dpmstikeskhas/#" style="display: inline-block; margin-right: 10px; color: white;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@dpmstikeskhas" style="display: inline-block; margin-right: 10px; color: white;"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigasi Cepat</h4>
+                <a href="index.html">Beranda</a>
+                <a href="tentangkami.html">Tentang Kami</a>
+                <a href="berita.html">Berita</a>
+                <a href="kotak-Aspirasi.html">Kotak Aspirasi</a>
+            </div>
+
+            <div class="footer-col" id="contact">
+                <h4>Hubungi Kami</h4>
+                <p><i class="fas fa-envelope"></i> ormawastikeskhas25.com</p>
+                <p><i class="fas fa-phone"></i> +62 838 1893 5831</p>
+                <a href="https://www.google.com/maps/place/STIKes+KHAS+Kempek+Cirebon/@-6.6955847,108.4113421,17z/..."><p><i class="fas fa-map-marker-alt"></i> STIKes Khas Kempek, Cirebon</p></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy;2025 - ORMAWA STIKes Khas Kempek. All Rights Reserved.
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://acigxznxktbdptezfbuk.supabase.co', 
+            'sb_publishable_GaLfQyvfjzJCgVLBAzWerA_7_OgU6ZS'
+        );
+
+        async function renderArtikelDetail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+
+            if (!articleId) {
+                document.getElementById('artTitle').innerText = "Berita Tidak Ditemukan";
+                document.getElementById('artContent').innerHTML = "<div class='alert alert-warning'>Tautan berita tidak valid atau ID belum disertakan.</div>";
+                return;
+            }
+
+            const { data: item, error } = await supabaseClient
+                .from('articles')
+                .select('*')
+                .eq('id', articleId)
+                .single();
+
+            if (error || !item) {
+                document.getElementById('artTitle').innerText = "Gagal Memuat Berita";
+                document.getElementById('artContent').innerHTML = "<div class='alert alert-danger'>Berita tidak ditemukan di database.</div>";
+                return;
+            }
+
+            document.title = item.title + " - ORMAWA STIKes KHAS";
+            document.getElementById('artTitle').innerText = item.title;
+            document.getElementById('artAuthor').innerText = item.author || "Tim Media ORMAWA";
+            document.getElementById('artDate').innerText = item.date || "Terbaru";
+            document.getElementById('artContent').innerHTML = item.content;
+            
+            // --- BAGIAN BREADCRUMB BARU (KATEGORI & SUB KATEGORI) ---
+            if (item.kategori) {
+                document.getElementById('breadCategory').innerText = item.kategori;
+            } else {
+                document.getElementById('breadCategory').style.display = 'none';
+            }
+
+            if (item.sub_kategori) {
+                document.getElementById('breadSubCategory').innerText = item.sub_kategori;
+            } else {
+                document.getElementById('breadSubCategory').style.display = 'none';
+            }
+            
+            // Membaca logo dinamis dari Supabase
+            const authorLogoElement = document.getElementById('artAuthorLogo');
+            if (item.author_logo && item.author_logo.trim() !== '') {
+                authorLogoElement.src = item.author_logo;
+            } else {
+                authorLogoElement.src = "img/download logo stikes.png";
+            }
+
+            // Gambar utama
+            if (item.image) {
+                document.getElementById('artImage').src = item.image;
+            } else {
+                document.getElementById('featuredImgContainer').style.display = 'none';
+            }
+        }
+
+        // Variabel untuk menyimpan halaman saat ini (dimulai dari 0)
+        let currentPage = 0;
+        const pageSize = 10; // Jumlah berita per halaman
+
+       
+        async function renderPopularNews(page = 0) {
+            currentPage = page;
+            const listContainer = document.getElementById('dynamicPopularList');
+            if (!listContainer) return;
+
+            // Hapus sistem cache di sini agar selalu mengambil data terbaru dari database
+            listContainer.innerHTML = '<p class="text-muted small">Memuat berita terbaru...</p>';
+
+            const start = page * pageSize;
+            const end = start + pageSize - 1;
+
+            const { data, error, count } = await supabaseClient
+                .from('articles')
+                .select('id, title, kategori', { count: 'exact' })
+                .order('id', { ascending: false })
+                .range(start, end);
+
+            if (error || !data || data.length === 0) {
+                listContainer.innerHTML = '<p class="text-danger small">Belum ada berita.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+
+            data.forEach((berita, index) => {
+                const number = start + index + 1; 
+                const kategori = berita.kategori || 'Kampus';
+                const link = `detail-berita.html?id=${berita.id}`; 
+
+                const htmlItem = `
+                    <div class="popular-item">
+                        <span class="popular-number">${number}</span>
+                        <div class="popular-content">
+                            <span class="popular-category">${kategori}</span>
+                            <h4><a href="${link}">${berita.title}</a></h4>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', htmlItem);
+            });
+
+            let paginationHTML = '<div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">';
+            
+            if (currentPage > 0) {
+                paginationHTML += `<button class="btn btn-sm btn-outline-secondary fw-bold" onclick="renderPopularNews(${currentPage - 1})" style="font-size: 0.75rem;">&laquo; Sebelumnya</button>`;
+            } else {
+                paginationHTML += `<div></div>`; 
+            }
+
+            if (count > end + 1) {
+                paginationHTML += `<button class="btn btn-sm btn-outline-primary fw-bold" onclick="renderPopularNews(${currentPage + 1})" style="font-size: 0.75rem;">Seterusnya &raquo;</button>`;
+            } else {
+                paginationHTML += `<div></div>`;
+            }
+            
+            paginationHTML += '</div>';
+            listContainer.insertAdjacentHTML('beforeend', paginationHTML);
+        }
+       
+        document.addEventListener('DOMContentLoaded', () => {
+            renderArtikelDetail(); // Menampilkan berita di kolom kiri
+            renderPopularNews(0);  // Menampilkan daftar populer dinamis halaman pertama
+        });
+        
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(function() {
+                    preloader.classList.add('loader-fade-out');
+                }, 1000); 
+            }
+        });
+
+        function shareToWhatsApp() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.title);
+            window.open(`https://api.whatsapp.com/send?text=*${title}*%0A%0ABaca selengkapnya di: ${url}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, 'facebook-share-dialog', 'width=800,height=600');
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Tautan berita berhasil disalin!");
+            });
+        }
+        
+        // HANDLER KOMENTAR KE GMAIL
+        const formKomentar = document.getElementById("commentForm");
+        const statusKomentar = document.getElementById("commentStatus");
+        const btnKirim = document.getElementById("btnKirimKomentar");
+
+        if (formKomentar) {
+            formKomentar.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const data = new FormData(formKomentar);
+
+                btnKirim.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Mengirim ke Gmail...';
+                btnKirim.disabled = true;
+
+                try {
+                    const response = await fetch(formKomentar.action, {
+                        method: "POST",
+                        body: data,
+                        headers: {
+                            Accept: "application/json",
+                        },
+                    });
+
+                    if (response.ok) {
+                        statusKomentar.style.display = "block";
+                        statusKomentar.style.color = "#2b8a3e";
+                        statusKomentar.innerText = "✓ Komentar berhasil dikirim dan masuk ke Gmail!";
+                        formKomentar.reset();
+                    } else {
+                        throw new Error("Gagal mengirim.");
+                    }
+                } catch (err) {
+                    statusKomentar.style.display = "block";
+                    statusKomentar.style.color = "#d9480f";
+                    statusKomentar.innerText = "Gagal mengirim. Pastikan terhubung internet.";
+                } finally {
+                    btnKirim.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Kirim Komentar';
+                    btnKirim.disabled = false;
+                }
+            });
+        }
+    </script>
+    <script>
+        // Efek background warna gelap pada Navbar saat di-scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (!navbar) return;
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
